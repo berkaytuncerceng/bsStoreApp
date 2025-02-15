@@ -5,9 +5,11 @@ VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebAPI\WebAPI.csproj", "{1C7D44EC-A22E-41D5-9E52-80E31FF71DE0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entities", "Entities\Entities.csproj", "{5591574F-3807-4EEE-93D1-AC61FC9C7225}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{5591574F-3807-4EEE-93D1-AC61FC9C7225}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositories", "Repositories\Repositories.csproj", "{F8C81444-382D-4158-AA4A-69D8FDDEA8A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Repositories", "Repositories\Repositories.csproj", "{F8C81444-382D-4158-AA4A-69D8FDDEA8A2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "IBookService\Services.csproj", "{B708B183-446A-4827-8CC7-B35415A73FD4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{F8C81444-382D-4158-AA4A-69D8FDDEA8A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8C81444-382D-4158-AA4A-69D8FDDEA8A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8C81444-382D-4158-AA4A-69D8FDDEA8A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B708B183-446A-4827-8CC7-B35415A73FD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B708B183-446A-4827-8CC7-B35415A73FD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B708B183-446A-4827-8CC7-B35415A73FD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B708B183-446A-4827-8CC7-B35415A73FD4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

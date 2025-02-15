@@ -2,20 +2,26 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Repositories.Contracts;
 using Repositories.EFCore;
 
 namespace WebAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	public class BooksController(RepositoryContext repositoryContext) : ControllerBase
+	public class BooksController: ControllerBase
 	{
-		private readonly RepositoryContext _repositoryContext = repositoryContext;
+		private readonly IRepositoryManager _manager;
+
+		public BooksController(IRepositoryManager manager)
+		{
+			_manager = manager;
+		}
 
 		[HttpGet]
 		public IActionResult GetAllBooks()
 		{
-			var books = _repositoryContext.Books;
+			var books = _manager.Book.GetAllBooks(false);
 			return Ok(books);
 		}
 
@@ -24,10 +30,7 @@ namespace WebAPI.Controllers
 		{
 			try
 			{
-				var book = _repositoryContext
-						.Books
-						.Where(i => i.Id == id)
-						.SingleOrDefault();
+				var book = _manager.Book.GetOneBookById(id, false);
 				return Ok(book);
 
 			}
@@ -46,8 +49,8 @@ namespace WebAPI.Controllers
 				{
 					return BadRequest();
 				}
-				_repositoryContext.Books.Add(book);
-				_repositoryContext.SaveChanges();
+				_manager.Book.CreateOneBook(book);
+				_manager.Save();
 				//return 201;
 				return StatusCode(201, book);
 			}
@@ -61,7 +64,7 @@ namespace WebAPI.Controllers
 		{
 			try
 			{
-				var book = _repositoryContext.Books.Where(i => i.Id == id).SingleOrDefault();
+				var book = _manager.Book.GetOneBookById(id, false);
 
 				if (book is null)
 				{
@@ -76,7 +79,7 @@ namespace WebAPI.Controllers
 				book.Title = bookToUpdate.Title;
 				book.Price = bookToUpdate.Price;
 
-				_repositoryContext.SaveChanges();
+				_manager.Save();
 				return Ok(book);
 			}
 			catch (Exception ex)
@@ -91,15 +94,15 @@ namespace WebAPI.Controllers
 		{
 			try
 			{
-				var book = _repositoryContext.Books.Where(i => i.Id == id).SingleOrDefault();
+				var book = _manager.Book.GetOneBookById(id , true);
 
 				if (book is null)
 				{
 					return NotFound();
 				}
 
-				_repositoryContext.Books.Remove(book);
-				_repositoryContext.SaveChanges();
+				_manager.Book.DeleteOneBook(book);
+				_manager.Save();
 				return NoContent();
 			}
 			catch (Exception ex)
@@ -113,7 +116,7 @@ namespace WebAPI.Controllers
 		{
 			try
 			{
-				var book = _repositoryContext.Books.Where(i => i.Id == id).SingleOrDefault();
+				var book = _manager.Book.GetOneBookById(id,true);
 
 				if (book is null)
 				{
@@ -127,7 +130,7 @@ namespace WebAPI.Controllers
 					return BadRequest(ModelState);
 				}
 
-				_repositoryContext.SaveChanges();
+				_manager.Save();
 				return Ok(book);
 			}
 			catch (Exception ex)
