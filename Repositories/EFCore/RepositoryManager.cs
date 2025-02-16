@@ -5,7 +5,7 @@ namespace Repositories.EFCore
 	public class RepositoryManager : IRepositoryManager
 	{
 		private readonly RepositoryContext _repositoryContext;
-		private readonly Lazy<IBookRepository> _bookRepository;
+		private readonly Lazy<IBookRepository> _bookRepository; 
 		public RepositoryManager(RepositoryContext repositoryContext)
 		{
 			_repositoryContext = repositoryContext;
