@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Exceptions;
+using Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Services.Contracts;
@@ -31,94 +32,67 @@ namespace Presentation.Controllers
 		[HttpGet("{id:int}")]
 		public IActionResult GetOneBook([FromRoute(Name = "id")] int id)
 		{
-			try
-			{
-				var book = _manager.BookService.GetOneBookById(id, false);
-				return Ok(book);
-
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
+			var book = _manager.BookService.GetOneBookById(id, false);
+			return Ok(book);
 		}
 
 		[HttpPost]
 		public IActionResult AddBook([FromBody] Book book)
 		{
-			try
+
+			if (book == null)
 			{
-				if (book == null)
-				{
-					return BadRequest();
-				}
-				_manager.BookService.CreateOneBook(book);
-				//return 201;
-				return StatusCode(201, book);
+				return BadRequest();
 			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
+			_manager.BookService.CreateOneBook(book);
+			//return 201;
+			return StatusCode(201, book);
 		}
+
+
 		[HttpPut("{id:int}")]
 		public IActionResult UpdateBook([FromRoute(Name = "id")] int id, [FromBody] Book bookToUpdate)
 		{
-			try
-			{
-				if (bookToUpdate is null)
-				{
-					return BadRequest();
-				}
-				_manager.BookService.UpdateOneBook(id, bookToUpdate, true);
-				return NoContent();
-			}
-			catch (Exception ex)
-			{
 
-				throw new Exception(ex.Message);
+			if (bookToUpdate is null)
+			{
+				return BadRequest();
 			}
+			_manager.BookService.UpdateOneBook(id, bookToUpdate, true);
+			return NoContent();
+
+
 		}
 
 		[HttpDelete("{id:int}")]
 		public IActionResult DeleteBook([FromRoute(Name = "id")] int id)
 		{
-			try
-			{
-				_manager.BookService.DeleteOneBook(id, false);
 
-				return NoContent();
-			}
-			catch (Exception ex)
-			{
-				throw new Exception(ex.Message);
-			}
+			_manager.BookService.DeleteOneBook(id, false);
+
+			return NoContent();
 		}
+
+
 
 		[HttpPatch("{id:int}")]
 		public IActionResult PartiallyUpdateBook([FromRoute(Name = "id")] int id, [FromBody] JsonPatchDocument<Book> patchDoc)
 		{
-			try
-			{
-				var book = _manager.BookService.GetOneBookById(id, true);
-				if (book == null)
-				{
-					return NotFound();
-				}
 
-				patchDoc.ApplyTo(book );
-				_manager.BookService.UpdateOneBook(id, book, true);
-				if (!ModelState.IsValid)
-				{
-					return BadRequest(ModelState);
-				}
-				return NoContent();
-			}
-			catch (Exception ex)
+			var book = _manager.BookService.GetOneBookById(id, true);
+	
+
+			patchDoc.ApplyTo(book);
+			_manager.BookService.UpdateOneBook(id, book, true);
+			if (!ModelState.IsValid)
 			{
-				throw new Exception(ex.Message);
+				return BadRequest(ModelState);
 			}
+			return NoContent();
+
 		}
 	}
-
 }
+
+
+

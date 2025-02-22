@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Exceptions;
+using Entities.Models;
 using Repositories.Contracts;
 using Services.Contracts;
 using System;
@@ -38,9 +39,9 @@ namespace Services
 			if (entity is null)
 
 			{
-				var logMessage = "Bu id'de kitap bulunamadı";
-				_logger.LogInfo(logMessage);
-				throw new Exception(nameof(entity));
+				//var logMessage = "Bu id'de kitap bulunamadı";
+				//_logger.LogInfo(logMessage);
+				throw new BookNotFoundException(id);
 			}
 			_manager.Book.DeleteOneBook(entity);
 			_manager.Save();
@@ -48,12 +49,24 @@ namespace Services
 
 		public IEnumerable<Book> GetAllBooks(bool trackChanges)
 		{
-			return _manager.Book.GetAllBooks(trackChanges).ToList();
+			var bookList = _manager.Book.GetAllBooks(trackChanges).ToList();
+			if (bookList.Count == 0)
+			{
+				var logMessage = "Kitaplar bulunamadı";
+				_logger.LogDebug(logMessage);
+				throw new Exception("Sistemde hiç kitap yok.");
+			}
+			return bookList;
 		}
 
 		public Book GetOneBookById(int bookId, bool trackChanges)
 		{
-			return _manager.Book.GetOneBookById(bookId, trackChanges);
+			var book = _manager.Book.GetOneBookById(bookId, trackChanges);
+			if (book is null)
+			{
+				throw new BookNotFoundException(bookId);
+			}
+			return book;
 		}
 
 		public void UpdateOneBook(int id, Book book, bool trackChanges)
@@ -61,11 +74,11 @@ namespace Services
 			var entity = _manager.Book.GetOneBookById(id, trackChanges);
 			if (entity is null)
 			{
-				throw new Exception(nameof(entity));
+				throw new BookNotFoundException(id);
 			}
 			if (book is null)
 			{
-				throw new ArgumentNullException(nameof(book));
+				throw new BookNotFoundException(id);
 			}
 			entity.Title = book.Title;
 			entity.Price = book.Price;
