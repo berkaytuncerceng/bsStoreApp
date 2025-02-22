@@ -86,6 +86,7 @@ namespace Presentation.Controllers
 			try
 			{
 				_manager.BookService.DeleteOneBook(id, false);
+
 				return NoContent();
 			}
 			catch (Exception ex)
