@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NLog;
 using Repositories.EFCore;
 using Services.Contracts;
@@ -9,8 +9,8 @@ LogManager.Setup().LoadConfigurationFromFile(String.Concat(Directory.GetCurrentD
 // Add services to the container.
 
 builder.Services.AddControllers()
-	.AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly)	
-	.AddNewtonsoftJson();
+	.AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly) // presentation katmanına taşıdığım controllerların referansı	
+	.AddNewtonsoftJson(); 
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,6 +21,10 @@ builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
 builder.Services.ConfigureServiceManager();
 builder.Services.ConfigureLoggerManager();
+builder.Services.AddAutoMapper(typeof(Program)); // Automapper için gerekli olan assembly referansı
+
+
+
 var app = builder.Build();
 var logger = app.Services.GetRequiredService<ILoggerService>();
 app.ConfigureExceptionHandler(logger);
